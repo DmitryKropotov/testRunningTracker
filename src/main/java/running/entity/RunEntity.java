@@ -1,8 +1,13 @@
 package running.entity;
 
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
 import java.util.Date;
 
 public class RunEntity {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int ID;
     private int userId;
     private int startLatitude;
@@ -13,9 +18,8 @@ public class RunEntity {
     private Date finishDateTime;
     private int distance;
 
-    public RunEntity(int ID, int userId, int startLatitude, int startLongutude, Date startDateTime, int finishLatitude,
+    public RunEntity(int userId, int startLatitude, int startLongutude, Date startDateTime, int finishLatitude,
                      int finishLongutude, Date finishDateTime, int distance) {
-        this.ID = ID;
         this.userId = userId;
         this.startLatitude = startLatitude;
         this.startLongutude = startLongutude;
