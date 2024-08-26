@@ -54,9 +54,4 @@ public class UserServiceImpl implements UserService {
         userRepository.findAll().forEach(userEntities::add);
         return userEntities;
     }
-
-    @Override
-    public UserStatistics getUserStatistics(int userId, Date startDateTimeFrom, Date startDateTimeTo) {
-        return null;
-    }
 }

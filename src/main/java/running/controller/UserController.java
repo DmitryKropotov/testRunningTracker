@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.RestController;
 import running.entity.UserEntity;
 import running.entity.enums.Sex;
 import running.model.UserStatistics;
+import running.service.RunService;
 import running.service.UserService;
 
 import java.util.Date;
@@ -19,6 +20,9 @@ public class UserController {
 
     @Autowired
     UserService userService;
+
+    @Autowired
+    RunService runService;
 
     @RequestMapping(method = RequestMethod.POST)
     public void addUser(@RequestParam String firstName, @RequestParam String lastName, @RequestParam Date birthDate, @RequestParam Sex sex) {
@@ -48,7 +52,7 @@ public class UserController {
     }
 
     @RequestMapping(method = RequestMethod.GET)
-    public UserStatistics getUserStatistics(@RequestParam int userId, Date startDateTimeFrom, Date startDateTimeTo) {
-        return null;
+    public UserStatistics getUserStatistics(@RequestParam int userId, @RequestParam(required = false) Date startDateTimeFrom, @RequestParam(required = false) Date startDateTimeTo) {
+        return runService.getUserStatistics(userId, Optional.of(startDateTimeFrom), Optional.of(startDateTimeTo));
     }
 }

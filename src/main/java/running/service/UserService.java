@@ -2,7 +2,6 @@ package running.service;
 
 import running.entity.UserEntity;
 import running.entity.enums.Sex;
-import running.model.UserStatistics;
 
 import java.util.Date;
 import java.util.List;
@@ -14,5 +13,4 @@ public interface UserService {
     void deleteUser(int userId);
     Optional<UserEntity> getUserById(int userId);
     List<UserEntity> getAllUsers();
-    UserStatistics getUserStatistics(int userId, Date startDateTimeFrom, Date startDateTimeTo);
 }

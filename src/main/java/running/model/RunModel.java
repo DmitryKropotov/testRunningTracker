@@ -25,4 +25,40 @@ public class RunModel {
         this.distance = distance;
         this.avgSpeed = avgSpeed;
     }
+
+    public int getUserId() {
+        return userId;
+    }
+
+    public int getStartLatitude() {
+        return startLatitude;
+    }
+
+    public int getStartLongutude() {
+        return startLongutude;
+    }
+
+    public Date getStartDateTime() {
+        return startDateTime;
+    }
+
+    public int getFinishLatitude() {
+        return finishLatitude;
+    }
+
+    public int getFinishLongutude() {
+        return finishLongutude;
+    }
+
+    public Date getFinishDateTime() {
+        return finishDateTime;
+    }
+
+    public int getDistance() {
+        return distance;
+    }
+
+    public int getAvgSpeed() {
+        return avgSpeed;
+    }
 }
