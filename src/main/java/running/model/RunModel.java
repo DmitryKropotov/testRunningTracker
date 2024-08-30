@@ -1,27 +1,27 @@
 package running.model;
 
-import java.util.Date;
+import java.time.Instant;
 
 public class RunModel {
     private int userId;
     private int startLatitude;
-    private int startLongutude;
-    private Date startDateTime;
+    private int startLongitude;
+    private Instant startInstantTime;
     private int finishLatitude;
-    private int finishLongutude;
-    private Date finishDateTime;
+    private int finishLongitude;
+    private Instant finishInstantTime;
     private int distance;
     private int avgSpeed;
 
-    public RunModel(int userId, int startLatitude, int startLongutude, Date startDateTime, int finishLatitude,
-                    int finishLongutude, Date finishDateTime, int distance, int avgSpeed) {
+    public RunModel(int userId, int startLatitude, int startLongitude, Instant startInstantTime, int finishLatitude,
+                    int finishLongitude, Instant finishInstantTime, int distance, int avgSpeed) {
         this.userId = userId;
         this.startLatitude = startLatitude;
-        this.startLongutude = startLongutude;
-        this.startDateTime = startDateTime;
+        this.startLongitude = startLongitude;
+        this.startInstantTime = startInstantTime;
         this.finishLatitude = finishLatitude;
-        this.finishLongutude = finishLongutude;
-        this.finishDateTime = finishDateTime;
+        this.finishLongitude = finishLongitude;
+        this.finishInstantTime = finishInstantTime;
         this.distance = distance;
         this.avgSpeed = avgSpeed;
     }
@@ -34,24 +34,24 @@ public class RunModel {
         return startLatitude;
     }
 
-    public int getStartLongutude() {
-        return startLongutude;
+    public int getStartLongitude() {
+        return startLongitude;
     }
 
-    public Date getStartDateTime() {
-        return startDateTime;
+    public Instant getStartInstantTime() {
+        return startInstantTime;
     }
 
     public int getFinishLatitude() {
         return finishLatitude;
     }
 
-    public int getFinishLongutude() {
-        return finishLongutude;
+    public int getFinishLongitude() {
+        return finishLongitude;
     }
 
-    public Date getFinishDateTime() {
-        return finishDateTime;
+    public Instant getFinishInstantTime() {
+        return finishInstantTime;
     }
 
     public int getDistance() {

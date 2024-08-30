@@ -6,7 +6,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import java.util.Date;
+import java.time.Instant;
 
 @Entity
 public class UserEntity {
@@ -15,10 +15,10 @@ public class UserEntity {
     private int ID;
     private String firstName;
     private String lastName;
-    private Date birthDate;
+    private Instant birthDate;
     private Sex sex;
 
-    public UserEntity(String firstName, String lastName, Date birthDate, Sex sex) {
+    public UserEntity(String firstName, String lastName, Instant birthDate, Sex sex) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.birthDate = birthDate;
@@ -37,7 +37,7 @@ public class UserEntity {
         return lastName;
     }
 
-    public Date getBirthDate() {
+    public Instant getBirthDate() {
         return birthDate;
     }
 
@@ -53,7 +53,7 @@ public class UserEntity {
         this.lastName = lastName;
     }
 
-    public void setBirthDate(Date birthDate) {
+    public void setBirthDate(Instant birthDate) {
         this.birthDate = birthDate;
     }
 

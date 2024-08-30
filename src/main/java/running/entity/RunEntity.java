@@ -3,7 +3,7 @@ package running.entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import java.util.Date;
+import java.time.Instant;
 
 public class RunEntity {
     @Id
@@ -12,14 +12,14 @@ public class RunEntity {
     private int userId;
     private int startLatitude;
     private int startLongutude;
-    private Date startDateTime;
+    private Instant startDateTime;
     private int finishLatitude;
     private int finishLongutude;
-    private Date finishDateTime;
+    private Instant finishDateTime;
     private int distance;
 
-    public RunEntity(int userId, int startLatitude, int startLongutude, Date startDateTime, int finishLatitude,
-                     int finishLongutude, Date finishDateTime, int distance) {
+    public RunEntity(int userId, int startLatitude, int startLongutude, Instant startDateTime, int finishLatitude,
+                     int finishLongutude, Instant finishDateTime, int distance) {
         this.userId = userId;
         this.startLatitude = startLatitude;
         this.startLongutude = startLongutude;
@@ -46,7 +46,7 @@ public class RunEntity {
         return startLongutude;
     }
 
-    public Date getStartDateTime() {
+    public Instant getStartDateTime() {
         return startDateTime;
     }
 
@@ -58,7 +58,7 @@ public class RunEntity {
         return finishLongutude;
     }
 
-    public Date getFinishDateTime() {
+    public Instant getFinishDateTime() {
         return finishDateTime;
     }
 

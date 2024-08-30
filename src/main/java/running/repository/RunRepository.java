@@ -1,7 +1,10 @@
 package running.repository;
 
-import running.entity.RunEntity;
-import org.springframework.data.repository.CrudRepository;
+import org.springframework.data.jpa.repository.JpaRepository;
+import running.entity.Run;
 
-public interface RunRepository extends CrudRepository<RunEntity, Integer>{
+import java.util.List;
+
+public interface RunRepository extends JpaRepository<Run, Integer> {
+    List<Run> findByUserId(int userId);
 }
