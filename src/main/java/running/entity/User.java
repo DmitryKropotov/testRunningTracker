@@ -1,9 +1,11 @@
 package running.entity;
 
+import jakarta.persistence.*;
 import running.entity.enums.Sex;
 
-import javax.persistence.*;
+
 import java.time.LocalDate;
+import java.util.List;
 
 @Entity
 @Table(name = "user")
@@ -12,18 +14,18 @@ public class User {
     @Column(name = "id", nullable = false)
     private Integer id;
 
-    @Lob
+    @OneToMany
+    private List<Run> runs;
+
     @Column(name = "firstname")
     private String firstName;
 
-    @Lob
     @Column(name = "lastname")
     private String lastName;
 
     @Column(name = "birthdate")
     private LocalDate birthdate;
 
-    @Lob
     @Column(name = "sex")
     private char sex;
 
@@ -31,15 +33,23 @@ public class User {
         return id;
     }
 
-    public User(String firstName, String lastName, LocalDate birthdate, char sex) {
-        this.firstName = firstName;
-        this.lastName = lastName;
-        this.birthdate = birthdate;
-        this.sex = sex;
-    }
-
+//    public User(String firstName, String lastName, LocalDate birthdate, char sex) {
+//        this.firstName = firstName;
+//        this.lastName = lastName;
+//        this.birthdate = birthdate;
+//        this.sex = sex;
+//    }
+//
     public void setId(Integer id) {
         this.id = id;
+    }
+
+    public List<Run> getRuns() {
+        return runs;
+    }
+
+    public void setRuns(List<Run> runs) {
+        this.runs = runs;
     }
 
     public String getFirstName() {

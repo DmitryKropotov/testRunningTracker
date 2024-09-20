@@ -1,6 +1,8 @@
 package running.entity;
 
-import javax.persistence.*;
+import jakarta.persistence.*;
+
+//import javax.persistence.*;
 import java.time.Instant;
 
 @Entity
@@ -35,17 +37,17 @@ public class Run {
     @Column(name = "distance")
     private int distance;
 
-    public Run(User user, Integer startLatitude, Integer finishLatitude, Integer startLongitude, Integer finishLongitude,
-               Instant startDateTime, Instant finishDateTime, int distance) {
-        this.user = user;
-        this.startLatitude = startLatitude;
-        this.finishLatitude = finishLatitude;
-        this.startLongitude = startLongitude;
-        this.finishLongitude = finishLongitude;
-        this.startDateTime = startDateTime;
-        this.finishDateTime = finishDateTime;
-        this.distance = distance;
-    }
+//    public Run(User user, Integer startLatitude, Integer finishLatitude, Integer startLongitude, Integer finishLongitude,
+//               Instant startDateTime, Instant finishDateTime, int distance) {
+        //this.user = user;
+//        this.startLatitude = startLatitude;
+//        this.finishLatitude = finishLatitude;
+//        this.startLongitude = startLongitude;
+//        this.finishLongitude = finishLongitude;
+//        this.startDateTime = startDateTime;
+//        this.finishDateTime = finishDateTime;
+//        this.distance = distance;
+//    }
 
     public Integer getId() {
         return id;
@@ -55,13 +57,13 @@ public class Run {
         this.id = id;
     }
 
-    public User getUser() {
-        return user;
-    }
-
-    public void setUser(User userid) {
-        this.user = userid;
-    }
+//    public User getUser() {
+//        return user;
+//    }
+//
+//    public void setUser(User userid) {
+//        this.user = userid;
+//    }
 
     public Integer getStartLatitude() {
         return startLatitude;
