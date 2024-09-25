@@ -2,6 +2,8 @@ package running.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import running.entity.RunEntity;
+import running.entity.UserEntity;
 import running.model.RunModel;
 import running.model.UserStatistics;
 import running.repository.RunRepository;
@@ -22,53 +24,63 @@ public class RunServiceImpl implements RunService {
     private Map<Integer, CurrentUserRun> userCurrentRun = new HashMap<>();
 
     @Override
-    public void startRun(int userId, int startLatitude, int startLongitude, Instant startDateTime) {
-        userCurrentRun.put(userId, new CurrentUserRun(startLatitude, startLatitude, startDateTime));
+    public void startRun(int userId, int startLatitude, int startLongitude, String startDateTime) {
+        Optional<UserEntity> user = userRepository.findById(userId);
+        if (!user.isPresent()) {
+            throw new RuntimeException("User with id " + userId + " not found");
+        }
+        userCurrentRun.put(userId, new CurrentUserRun(startLatitude, startLongitude, convertStringToInstant(startDateTime)));
     }
 
     @Override
-    public void finishRun(int userId, int finishLatitude, int finishLongitude, Instant finishDateTime, Optional<Integer> distance) {
+    public void finishRun(int userId, int finishLatitude, int finishLongitude, String finishDateTime, Optional<Integer> distance) {
         CurrentUserRun userRun = userCurrentRun.get(userId);
         if (userRun == null) {
             throw new RuntimeException("Run of user with userId " + userId + " was not started");
         }
-//        Run run = new Run(userRepository.findById(userId).get(), userRun.startLatitude, finishLatitude,
-//                userRun.startLongitude, finishLongitude, userRun.startDateTime, finishDateTime,
-//                             distance.orElse(calculateDistance(userRun.startLatitude, finishLatitude, userRun.startLongitude, finishLongitude)));
-//        userCurrentRun.remove(userId);
-        //runRepository.save(run);
+        RunEntity run = new RunEntity(userRepository.findById(userId).get(), userRun.startLatitude, finishLatitude,
+                userRun.startLongitude, finishLongitude, userRun.startDateTime, convertStringToInstant(finishDateTime),
+                             distance.orElse(calculateDistance(userRun.startLatitude, finishLatitude, userRun.startLongitude, finishLongitude)));
+        userCurrentRun.remove(userId);
+        runRepository.save(run);
     }
 
     @Override
-    public List<RunModel> getAllRuns(int userId, Optional<Instant> startDateTimeFrom, Optional<Instant> startDateTimeTo) {
-        //List<Run> runEntities = runRepository.findByUserId(userId);
-        return null;
-//        return runEntities.stream().filter(run -> run.getStartDateTime().isAfter(startDateTimeFrom.orElse(Instant.EPOCH)) &&
-//                run.getStartDateTime().isBefore(startDateTimeTo.orElse(Instant.MAX)) ||
-//                run.getStartDateTime().equals(startDateTimeFrom) ||
-//                run.getStartDateTime().equals(startDateTimeTo)).map(this::convertRunEntityToRunModel).toList();
+    public List<RunModel> getAllRuns(int userId, Optional<String> startDateTimeFrom, Optional<String> startDateTimeTo) {
+        List<RunEntity> runEntities = runRepository.findByUserId(userId);
+        return runEntities.stream().filter(run -> run.getStartDateTime().isAfter(convertOptionalStringToInstant(startDateTimeFrom, Instant.MIN)) &&
+                run.getStartDateTime().isBefore(convertOptionalStringToInstant(startDateTimeTo, Instant.MAX)) ||
+                run.getStartDateTime().equals(convertOptionalStringToInstant(startDateTimeFrom, Instant.MIN)) ||
+                run.getStartDateTime().equals(convertOptionalStringToInstant(startDateTimeTo, Instant.MAX))).map(this::convertRunEntityToRunModel).toList();
     }
 
     @Override
-    public UserStatistics getUserStatistics(int userId, Optional<Instant> startDateTimeFrom, Optional<Instant> startDateTimeTo) {
+    public UserStatistics getUserStatistics(int userId, Optional<String> startDateTimeFrom, Optional<String> startDateTimeTo) {
         List<RunModel> runModels = getAllRuns(userId, startDateTimeFrom, startDateTimeTo);
-        runModels.stream().forEach(runModel -> {});
         return new UserStatistics(runModels.size(), runModels.stream().mapToInt(RunModel::getDistance).sum(),
-                runModels.stream().mapToInt(runModel -> calculateAvgSpeed(runModel.getDistance(),
-                        runModel.getStartInstantTime(), runModel.getFinishInstantTime())).sum()/runModels.size(),
-                startDateTimeFrom.orElse(null), startDateTimeTo.orElse(null));
+                runModels.stream().mapToInt(RunModel::getDistance).sum()/
+                        runModels.stream().mapToInt(runModel -> runModel.getDistance()/runModel.getAvgSpeed()).sum(),
+                convertOptionalStringToInstant(startDateTimeFrom, Instant.MIN), convertOptionalStringToInstant(startDateTimeTo, Instant.MAX));
     }
 
     private int calculateDistance(int startLatitude, int startLongitude, int finishLatitude, int finishLongitude) {
         return (int) Math.sqrt((finishLatitude-startLatitude)^2 + (startLongitude-finishLongitude)^2);
     }
 
-//    private RunModel convertRunEntityToRunModel(Run run) {
-//        return new RunModel(run.getUser().getId(), run.getStartLatitude(), run.getStartLongitude(),
-//                run.getStartDateTime(), run.getFinishLatitude(), run.getFinishLongitude(),
-//                run.getFinishDateTime(), run.getDistance(), calculateAvgSpeed(run.getDistance(),
-//                run.getStartDateTime(), run.getFinishDateTime()));
-//    }
+    private Instant convertStringToInstant(String dateTime) {
+        return Instant.parse(dateTime);//?
+    }
+
+    private Instant convertOptionalStringToInstant(Optional<String> dateTime, Instant defaultValue) {
+        return !dateTime.isEmpty()? convertStringToInstant(dateTime.get()): defaultValue;
+    }
+
+    private RunModel convertRunEntityToRunModel(RunEntity run) {
+        return new RunModel(run.getUser().getId(), run.getStartLatitude(), run.getStartLongitude(),
+                run.getStartDateTime(), run.getFinishLatitude(), run.getFinishLongitude(),
+                run.getFinishDateTime(), run.getDistance(), calculateAvgSpeed(run.getDistance(),
+                run.getStartDateTime(), run.getFinishDateTime()));
+    }
 
     private int calculateAvgSpeed(int distance, Instant startDateTime, Instant finishDateTime) {
         return (distance/((int)(startDateTime.toEpochMilli()-finishDateTime.toEpochMilli())))/1000;

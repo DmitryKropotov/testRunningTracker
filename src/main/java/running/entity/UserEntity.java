@@ -1,62 +1,95 @@
 package running.entity;
 
-import running.entity.enums.Sex;
+import jakarta.persistence.*;
 
-//import javax.persistence.Entity;
-//import javax.persistence.GeneratedValue;
-//import javax.persistence.GenerationType;
-//import javax.persistence.Id;
-import java.time.Instant;
 
+import java.time.LocalDate;
+import java.util.List;
+
+@Entity
+@Table(name = "user")
 public class UserEntity {
-//    @Id
-//    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int ID;
-    private String firstName;
-    private String lastName;
-    private Instant birthDate;
-    private Sex sex;
+    @Id
+    @Column(name = "id", nullable = false)
+    private Integer id;
 
-    public UserEntity(String firstName, String lastName, Instant birthDate, Sex sex) {
+    @OneToMany
+    private List<RunEntity> runEntities;
+
+    @Column(name = "firstname")
+    private String firstName;
+
+    @Column(name = "lastname")
+    private String lastName;
+
+    @Column(name = "birthdate")
+    private LocalDate birthdate;
+
+    @Column(name = "sex")
+    private char sex;
+
+    public UserEntity() {}
+
+    public UserEntity(String firstName, String lastName, LocalDate birthdate, char sex) {
         this.firstName = firstName;
         this.lastName = lastName;
-        this.birthDate = birthDate;
+        this.birthdate = birthdate;
         this.sex = sex;
     }
 
-    public int getID() {
-        return ID;
+    public UserEntity(int id, String firstName, String lastName, LocalDate birthdate, char sex) {
+        this.id = id;
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.birthdate = birthdate;
+        this.sex = sex;
+    }
+
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
+    public List<RunEntity> getRuns() {
+        return runEntities;
+    }
+
+    public void setRuns(List<RunEntity> runEntities) {
+        this.runEntities = runEntities;
     }
 
     public String getFirstName() {
         return firstName;
     }
 
+    public void setFirstName(String firstname) {
+        this.firstName = firstname;
+    }
+
     public String getLastName() {
         return lastName;
     }
 
-    public Instant getBirthDate() {
-        return birthDate;
+    public void setLastName(String lastname) {
+        this.lastName = lastname;
     }
 
-    public Sex getSex() {
+    public LocalDate getBirthdate() {
+        return birthdate;
+    }
+
+    public void setBirthdate(LocalDate birthdate) {
+        this.birthdate = birthdate;
+    }
+
+    public char getSex() {
         return sex;
     }
 
-    public void setFirstName(String firstName) {
-        this.firstName = firstName;
-    }
-
-    public void setLastName(String lastName) {
-        this.lastName = lastName;
-    }
-
-    public void setBirthDate(Instant birthDate) {
-        this.birthDate = birthDate;
-    }
-
-    public void setSex(Sex sex) {
+    public void setSex(char sex) {
         this.sex = sex;
     }
 }

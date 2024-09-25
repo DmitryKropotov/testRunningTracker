@@ -1,10 +1,10 @@
 package running.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
-import running.entity.Run;
+import running.entity.RunEntity;
 
 import java.util.List;
 
-public interface RunRepository extends JpaRepository<Run, Integer> {
-    List<Run> findByUserId(int userId);
+public interface RunRepository extends JpaRepository<RunEntity, Integer> {
+    List<RunEntity> findByUserId(int userId);
 }

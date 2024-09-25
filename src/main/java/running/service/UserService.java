@@ -1,17 +1,14 @@
 package running.service;
 
-//import running.entity.User;
-import running.entity.enums.Sex;
-
-import java.time.Instant;
+import running.entity.UserEntity;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
 public interface UserService {
-    void addUser(String firstName, String lastName, LocalDate birthDate, Sex sex);
-    void editUser(int userId, Optional<String> firstName, Optional<String> lastName, Optional<LocalDate> birthDate, Optional<Sex> sex);
+    void addUser(String firstName, String lastName, LocalDate birthDate, Character sex);
+    void editUser(int userId, Optional<String> firstName, Optional<String> lastName, Optional<String> birthDate, Optional<Character> sex);
     void deleteUser(int userId);
-    //Optional<User> getUserById(int userId);
-    //List<User> getAllUsers();
+    Optional<UserEntity> getUserById(int userId);
+    List<UserEntity> getAllUsers();
 }
