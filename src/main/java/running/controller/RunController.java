@@ -2,6 +2,7 @@ package running.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import running.entity.RunEntity;
 import running.model.RunModel;
 import running.model.UserStatistics;
 import running.service.RunService;
@@ -13,18 +14,18 @@ import java.util.Optional;
 public class RunController {
 
     @Autowired
-    private RunService runService;
+    protected RunService runService;
 
     @RequestMapping(method = RequestMethod.GET, value = "/startRun")
-    public void startRun(int userId, @RequestParam(required = false) int startLatitude,
-                         @RequestParam(required = false) int startLongitude, @RequestParam(required = false) String startDateTime) {
+    public void startRun(int userId, @RequestParam(required = false) double startLatitude,
+                              @RequestParam(required = false) double startLongitude, @RequestParam(required = false) String startDateTime) {
         runService.startRun(userId, startLatitude, startLongitude, startDateTime);
     }
 
     @RequestMapping(method = RequestMethod.GET, value = "/finishRun")
-    public void finishRun(int userId, @RequestParam int finishLatitude, @RequestParam int finishLongitude,
+    public RunEntity finishRun(int userId, @RequestParam double finishLatitude, @RequestParam double finishLongitude,
                           @RequestParam String finishDateTime, @RequestParam(required = false) int distance) {
-        runService.finishRun(userId, finishLatitude, finishLongitude, finishDateTime, Optional.of(distance));
+        return runService.finishRun(userId, finishLatitude, finishLongitude, finishDateTime, Optional.of(distance));
     }
 
     @RequestMapping(method = RequestMethod.GET, value = "/getAllRuns")

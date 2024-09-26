@@ -21,11 +21,11 @@ public class UserServiceImpl implements UserService {
     private static int userId = 1;
 
     @Override
-    public void addUser(String firstName, String lastName, LocalDate birthDate, Character sex) {
+    public UserEntity addUser(String firstName, String lastName, LocalDate birthDate, Character sex) {
         if(Arrays.stream(Sex.values()).noneMatch(s->s.name().equals(String.valueOf(sex).toUpperCase()))) {
           throw new RuntimeException("You can send only M and W as sex. Sex " + sex + " doesn't exist");
         }
-        userRepository.save(new UserEntity(userId++, firstName, lastName, birthDate, sex.toString().toUpperCase().charAt(0)));
+        return userRepository.save(new UserEntity(userId++, firstName, lastName, birthDate, sex.toString().toUpperCase().charAt(0)));
     }
 
     @Override

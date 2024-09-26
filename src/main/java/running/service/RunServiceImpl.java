@@ -16,24 +16,36 @@ import java.util.*;
 public class RunServiceImpl implements RunService {
 
     @Autowired
-    private RunRepository runRepository;
+    protected RunRepository runRepository;
 
     @Autowired
-    private UserRepository userRepository;
+    protected UserRepository userRepository;
 
     private Map<Integer, CurrentUserRun> userCurrentRun = new HashMap<>();
 
     @Override
-    public void startRun(int userId, int startLatitude, int startLongitude, String startDateTime) {
+    public void startRun(int userId, double startLatitude, double startLongitude, String startDateTime) {
+        if(startLatitude<-90 || startLatitude>90) {
+            throw new IllegalArgumentException("startLatitude must be between -90 and 90 degrees");
+        }
+        if( startLongitude<-180 || startLongitude>180) {
+            throw new IllegalArgumentException("startLongitude must be between -180 and 180 degrees");
+        }
         Optional<UserEntity> user = userRepository.findById(userId);
-        if (!user.isPresent()) {
+        if (user.isEmpty()) {
             throw new RuntimeException("User with id " + userId + " not found");
         }
         userCurrentRun.put(userId, new CurrentUserRun(startLatitude, startLongitude, convertStringToInstant(startDateTime)));
     }
 
     @Override
-    public void finishRun(int userId, int finishLatitude, int finishLongitude, String finishDateTime, Optional<Integer> distance) {
+    public RunEntity finishRun(int userId, double finishLatitude, double finishLongitude, String finishDateTime, Optional<Integer> distance) {
+        if(finishLatitude<-90 || finishLatitude>90) {
+            throw new IllegalArgumentException("startLatitude must be between -90 and 90 degrees");
+        }
+        if( finishLongitude<-180 || finishLongitude>180) {
+            throw new IllegalArgumentException("startLongitude must be between -180 and 180 degrees");
+        }
         CurrentUserRun userRun = userCurrentRun.get(userId);
         if (userRun == null) {
             throw new RuntimeException("Run of user with userId " + userId + " was not started");
@@ -42,7 +54,7 @@ public class RunServiceImpl implements RunService {
                 userRun.startLongitude, finishLongitude, userRun.startDateTime, convertStringToInstant(finishDateTime),
                              distance.orElse(calculateDistance(userRun.startLatitude, finishLatitude, userRun.startLongitude, finishLongitude)));
         userCurrentRun.remove(userId);
-        runRepository.save(run);
+        return runRepository.save(run);
     }
 
     @Override
@@ -57,18 +69,24 @@ public class RunServiceImpl implements RunService {
     @Override
     public UserStatistics getUserStatistics(int userId, Optional<String> startDateTimeFrom, Optional<String> startDateTimeTo) {
         List<RunModel> runModels = getAllRuns(userId, startDateTimeFrom, startDateTimeTo);
-        return new UserStatistics(runModels.size(), runModels.stream().mapToInt(RunModel::getDistance).sum(),
-                runModels.stream().mapToInt(RunModel::getDistance).sum()/
-                        runModels.stream().mapToInt(runModel -> runModel.getDistance()/runModel.getAvgSpeed()).sum(),
+        if (runModels.isEmpty()) {
+            return new UserStatistics(0, 0, 0,
                 convertOptionalStringToInstant(startDateTimeFrom, Instant.MIN), convertOptionalStringToInstant(startDateTimeTo, Instant.MAX));
+        } else {
+            return new UserStatistics(runModels.size(), runModels.stream().mapToInt(RunModel::getDistance).sum(),
+                runModels.stream().mapToInt(RunModel::getDistance).sum() /
+                        runModels.stream().mapToDouble(runModel -> runModel.getDistance() / runModel.getAvgSpeed()).sum(),
+                convertOptionalStringToInstant(startDateTimeFrom, Instant.MIN), convertOptionalStringToInstant(startDateTimeTo, Instant.MAX));
+        }
     }
 
-    private int calculateDistance(int startLatitude, int startLongitude, int finishLatitude, int finishLongitude) {
-        return (int) Math.sqrt((finishLatitude-startLatitude)^2 + (startLongitude-finishLongitude)^2);
+    private int calculateDistance(double startLatitude, double startLongitude, double finishLatitude, double finishLongitude) {
+        return (int) Math.sqrt((finishLatitude-startLatitude)*(finishLatitude-startLatitude)*111000*111000 +
+                (startLongitude-finishLongitude)*(startLongitude-finishLongitude)*111300*111300);//Assuming 1 latitude = 111 km, 1 longitude = 111.3 km
     }
 
     private Instant convertStringToInstant(String dateTime) {
-        return Instant.parse(dateTime);//?
+        return Instant.parse(dateTime);
     }
 
     private Instant convertOptionalStringToInstant(Optional<String> dateTime, Instant defaultValue) {
@@ -82,27 +100,27 @@ public class RunServiceImpl implements RunService {
                 run.getStartDateTime(), run.getFinishDateTime()));
     }
 
-    private int calculateAvgSpeed(int distance, Instant startDateTime, Instant finishDateTime) {
-        return (distance/((int)(startDateTime.toEpochMilli()-finishDateTime.toEpochMilli())))/1000;
+    private double calculateAvgSpeed(int distance, Instant startDateTime, Instant finishDateTime) {
+        return ((double) distance/((int)(finishDateTime.toEpochMilli()-startDateTime.toEpochMilli())))*1000;
     }
 
     private class CurrentUserRun {
-        private int startLatitude;
-        private int startLongitude;
+        private double startLatitude;
+        private double startLongitude;
         private Instant startDateTime;
 
 
-        public CurrentUserRun(int startLatitude, int startLongitude, Instant startDateTime) {
+        public CurrentUserRun(double startLatitude, double startLongitude, Instant startDateTime) {
             this.startLatitude = startLatitude;
             this.startLongitude = startLongitude;
             this.startDateTime = startDateTime;
         }
 
-        public int getStartLatitude() {
+        public double getStartLatitude() {
             return startLatitude;
         }
 
-        public int getStartLongitude() {
+        public double getStartLongitude() {
             return startLongitude;
         }
 

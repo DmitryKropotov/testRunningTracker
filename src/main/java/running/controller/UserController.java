@@ -17,8 +17,8 @@ public class UserController {
     UserService userService;
 
     @PostMapping("/addUser")
-    public void addUser(String firstName, @RequestParam(required = false) String lastName, @RequestParam String birthDate, @RequestParam Character sex) {
-        userService.addUser(firstName, lastName, LocalDate.parse(birthDate, DateTimeFormatter.ofPattern("dd.MM.yyyy")), sex);
+    public UserEntity addUser(String firstName, @RequestParam(required = false) String lastName, @RequestParam String birthDate, @RequestParam Character sex) {
+        return userService.addUser(firstName, lastName, LocalDate.parse(birthDate, DateTimeFormatter.ofPattern("dd.MM.yyyy")), sex);
     }
 
     @RequestMapping(method = RequestMethod.POST, value = "/editUser")

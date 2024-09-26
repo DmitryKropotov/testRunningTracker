@@ -16,16 +16,16 @@ public class RunEntity {
     private UserEntity user;
 
     @Column(name = "startlatitude")
-    private Integer startLatitude;
+    private Double startLatitude;
 
     @Column(name = "finishlatitude")
-    private Integer finishLatitude;
+    private Double finishLatitude;
 
     @Column(name = "startlongitude")
-    private Integer startLongitude;
+    private Double startLongitude;
 
     @Column(name = "finishlongitude")
-    private Integer finishLongitude;
+    private Double finishLongitude;
 
     @Column(name = "startdatetime")
     private Instant startDateTime;
@@ -36,7 +36,19 @@ public class RunEntity {
     @Column(name = "distance")
     private int distance;
 
-    public RunEntity(UserEntity user, Integer startLatitude, Integer finishLatitude, Integer startLongitude, Integer finishLongitude,
+    public RunEntity(Integer id, UserEntity user, Double startLatitude, Double finishLatitude, Double startLongitude, Double finishLongitude, Instant startDateTime, Instant finishDateTime, int distance) {
+        this.id = id;
+        this.user = user;
+        this.startLatitude = startLatitude;
+        this.finishLatitude = finishLatitude;
+        this.startLongitude = startLongitude;
+        this.finishLongitude = finishLongitude;
+        this.startDateTime = startDateTime;
+        this.finishDateTime = finishDateTime;
+        this.distance = distance;
+    }
+
+    public RunEntity(UserEntity user, Double startLatitude, Double finishLatitude, Double startLongitude, Double finishLongitude,
                      Instant startDateTime, Instant finishDateTime, int distance) {
         this.user = user;
         this.startLatitude = startLatitude;
@@ -66,35 +78,35 @@ public class RunEntity {
         this.user = userEntity;
     }
 
-    public Integer getStartLatitude() {
+    public Double getStartLatitude() {
         return startLatitude;
     }
 
-    public void setStartLatitude(Integer startlatitude) {
+    public void setStartLatitude(Double startlatitude) {
         this.startLatitude = startlatitude;
     }
 
-    public Integer getFinishLatitude() {
+    public Double getFinishLatitude() {
         return finishLatitude;
     }
 
-    public void setFinishLatitude(Integer finishlatitude) {
+    public void setFinishLatitude(Double finishlatitude) {
         this.finishLatitude = finishlatitude;
     }
 
-    public Integer getStartLongitude() {
+    public Double getStartLongitude() {
         return startLongitude;
     }
 
-    public void setStartLongitude(Integer startlongitude) {
+    public void setStartLongitude(Double startlongitude) {
         this.startLongitude = startlongitude;
     }
 
-    public Integer getFinishLongitude() {
+    public Double getFinishLongitude() {
         return finishLongitude;
     }
 
-    public void setFinishLongitude(Integer finishlongitude) {
+    public void setFinishLongitude(Double finishlongitude) {
         this.finishLongitude = finishlongitude;
     }
 
